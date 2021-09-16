@@ -1,0 +1,10 @@
+import requests 
+
+##Check for MQTT messages
+def check_for_interrupt():
+    #if interrupt && interrupt = temp request
+        #publish temps
+    #elif interrupt && interrupt = set request
+        #set temp
+        #publish temps 
+    return None
