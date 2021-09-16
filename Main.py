@@ -11,14 +11,14 @@ def main():
 
     #while loop runs infinately to iterate the thermostat actual temp up and down
     #once every 2-10 minutes and checks for an MQTT message (interrupt) once every second 
-    
+
     while (True):
         rand_time = randint(1,5)
         
-        Thermostat.temp_loop(thermostat)
+        thermostat.temp_loop(thermostat)
 
         for i in range(rand_time):
-            Check.check_for_interrupt()
+            Check.check_for_interrupt(thermostat)
             time.sleep(1)
 
 

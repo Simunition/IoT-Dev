@@ -13,6 +13,11 @@ class Thermostat:
     def increment_temp(self, x):
         self.actual_temp += x
 
+    def change_set_temp(self, x):
+        self.set_temp = x
+        self.max = self.set_temp + 1
+        self.min = self.set_temp - 2
+
     def temp_loop(self, thermostat):
 
         def increment(x):
