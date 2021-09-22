@@ -1,4 +1,4 @@
-import requests 
+#import requests 
 
 ##Check for MQTT messages
 def check_for_interrupt(thermostat):
