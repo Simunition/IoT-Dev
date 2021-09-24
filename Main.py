@@ -5,8 +5,7 @@ import Check_For_Interrupts as Check
 from awsiot import mqtt_connection_builder
 from awscrt import mqtt, io
 
-global thermostat 
-thermostat = Thermostat.Thermostat()
+
 
 ##Main Function 
 def main():
@@ -14,6 +13,9 @@ def main():
     event_loop_group = io.EventLoopGroup(1)
     host_resolver = io.DefaultHostResolver(event_loop_group)
     client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
+
+    thermostat = Thermostat.Thermostat()
+    check = Check.Check_For_Interrupts()
 
     #variables for mqtt connection and pub/sub
     endpoint = ''   #ex \"abcd12345wxyz-ats.iot.us-east-1.amazonaws.com\"
@@ -32,8 +34,8 @@ def main():
             pri_key_filepath=key,
             client_bootstrap=client_bootstrap,
             ca_filepath=root_ca,
-            on_connection_interrupted=Check.on_connection_interrupted,
-            on_connection_resumed=Check.on_connection_resumed,
+            on_connection_interrupted=check.on_connection_interrupted,
+            on_connection_resumed=check.on_connection_resumed,
             client_id=client_id,
             clean_session=False,
             keep_alive_secs=30,
@@ -53,7 +55,7 @@ def main():
     subscribe_future, packet_id = mqtt_connection.subscribe(
         topic=sub_topic,
         qos=mqtt.QoS.AT_LEAST_ONCE,
-        callback=Check.on_message_received)
+        callback=check.on_message_received)
 
     subscribe_result = subscribe_future.result()
     print("Subscribed with {}".format(str(subscribe_result['qos'])))
@@ -74,6 +76,11 @@ def main():
             )
 
             for i in range(rand_time):
+                if(check.messageSet == True):
+                    setRequest = check.message
+                    thermostat.change_set_temp(setRequest[1])
+                    newSet = thermostat.getData
+                    print(newSet)
                 time.sleep(1)
 
     except KeyboardInterrupt:
