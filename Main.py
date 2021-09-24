@@ -7,20 +7,21 @@ from awscrt import mqtt, io
 
 ##Main Function 
 def main():
-    # Spin up resources
+    #Spin up resources
     event_loop_group = io.EventLoopGroup(1)
     host_resolver = io.DefaultHostResolver(event_loop_group)
     client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
 
-    #create a thermostat
+    # #create a thermostat
+    global thermostat 
     thermostat = Thermostat.Thermostat()
 
     #variables for mqtt connection and pub/sub
-    endpoint = 'a1w7q2emoqb76a-ats.iot.us-east-2.amazonaws.com'   #ex \"abcd12345wxyz-ats.iot.us-east-1.amazonaws.com\"
+    endpoint = ''   #ex \"abcd12345wxyz-ats.iot.us-east-1.amazonaws.com\"
     port = 8883      #443 or 8883
-    cert = 'C:\\Users\\sims8\\OneDrive\\Public\\Python\\IoT\\4a90b6d6a1-certificate.pem'       #file path to client cert in PEM format.
-    key = 'C:\\Users\\sims8\\OneDrive\\Public\\Python\\IoT\\4a90b6d6a1-private.pem'        #File path to your private key, in PEM format.
-    root_ca = 'C:\\Users\\sims8\\OneDrive\\Public\\Python\\IoT\\AmazonRootCA1.pem'    #file path to root CA in PEM format.
+    cert = ''       #file path to client cert in PEM format.
+    key = ''        #File path to your private key, in PEM format.
+    root_ca = ''    #file path to root CA in PEM format.
     client_id = 'clientTest'  #client ID for MQTT connection
     sub_topic = 'subTest'      #topic to sub to
     pub_topic = 'pubTest'      #topic to pub to
@@ -48,7 +49,7 @@ def main():
     connect_future.result()
     print("Connected!")
 
-    # Subscribe
+    ##Subscribe
     print("Subscribing to topic '{}'...".format(sub_topic))
     subscribe_future, packet_id = mqtt_connection.subscribe(
         topic=sub_topic,
@@ -63,8 +64,8 @@ def main():
         while (True):
             rand_time = randint(1,5) ##change to 120, 600 in production
             
-            thermostat.temp_loop(thermostat)
-            data = json.dumps(thermostat.getData(thermostat))
+            thermostat.temp_loop()
+            data = json.dumps(thermostat.getData())
             print(data)
 
             mqtt_connection.publish(

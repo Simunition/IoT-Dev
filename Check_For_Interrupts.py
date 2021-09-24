@@ -31,13 +31,13 @@ def on_resubscribe_complete(resubscribe_future):
                 sys.exit("Server rejected resubscribe to topic: {}".format(topic))
 
 
-def on_message_received(topic, payload, dup, qos, retain, **kwargs):
+def on_message_received(topic, payload, thermostat, dup, qos, retain, **kwargs):
     print("Received message from topic '{}': {}".format(topic, payload))
     global received_count
     received_count += 1
+
+    data = (payload.decode('utf-8')).split(':')
     
-    ##if message is set temp request
-        ##set temp
-        ##publish temp
-    ##if message is request temp
-        ##publish temp
+    if 'set' in data:
+        thermostat.change_set_temp(int(data[2]))
+        print(thermostat.getData)
