@@ -4,7 +4,7 @@ import sys
 
 class Check_For_Interrupts:
 
-    def __init__(self, message, message_set = False, received_count = 0):
+    def __init__(self, message = '', message_set = False, received_count = 0):
         self.message = message
         self.messageSet = message_set
         self.received_count = received_count
@@ -38,7 +38,7 @@ class Check_For_Interrupts:
 
 
     def on_message_received(self, topic, payload, dup, qos, retain, **kwargs):
-        print("Received message from topic '{}': {}".format(topic, payload))
+        print("Received message from topic '{}': {}".format(topic, payload.decode('utf-8')))
         global received_count
         self.received_count += 1
 

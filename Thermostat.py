@@ -3,7 +3,8 @@
 
 class Thermostat:
 
-    def __init__(self, last_temp = 69, set_temp = 70, actual_temp = 70):
+    def __init__(self, name, last_temp = 69, set_temp = 70, actual_temp = 70):
+        self.name = name
         self.last_temp = last_temp
         self.set_temp = set_temp
         self.actual_temp = actual_temp
@@ -20,9 +21,9 @@ class Thermostat:
 
     def getData(self):
         data = {}
+        data['name'] = self.name
         data['SetTemperature'] = self.set_temp
         data['ActualTemperature'] = self.actual_temp
-        data['LastTemperature'] = self.last_temp
         data2 = {}
         data2['desired'] = data
         data3 = {}

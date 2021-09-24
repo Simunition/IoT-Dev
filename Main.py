@@ -14,7 +14,7 @@ def main():
     host_resolver = io.DefaultHostResolver(event_loop_group)
     client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
 
-    thermostat = Thermostat.Thermostat()
+    thermostat = Thermostat.Thermostat('thermostatName') #Must pass a name for the thermostat
     check = Check.Check_For_Interrupts()
 
     #variables for mqtt connection and pub/sub
@@ -63,7 +63,7 @@ def main():
     #publish 
     try:
         while (True):
-            rand_time = randint(1,5) ##change to 120, 600 in production
+            rand_time = randint(120,600) ##change to 120, 600 in production, 1,5 for testing
             
             thermostat.temp_loop()
             data = json.dumps(thermostat.getData())
@@ -78,9 +78,8 @@ def main():
             for i in range(rand_time):
                 if(check.messageSet == True):
                     setRequest = check.message
-                    thermostat.change_set_temp(setRequest[1])
-                    newSet = thermostat.getData
-                    print(newSet)
+                    thermostat.change_set_temp(int(setRequest[1]))
+                    check.messageSet = False
                 time.sleep(1)
 
     except KeyboardInterrupt:
