@@ -18,14 +18,22 @@ class Thermostat:
         self.max = self.set_temp + 1
         self.min = self.set_temp - 2
 
+    def getData(self, thermostat):
+        data = {}
+        data['SetTemperature'] = thermostat.set_temp
+        data['ActualTemperature'] = thermostat.actual_temp
+        data['LastTemperature'] = thermostat.last_temp
+        data2 = {}
+        data2['desired'] = data
+        data3 = {}
+        data3['state'] = data2
+        return data3
+
     def temp_loop(self, thermostat):
 
         def increment(x):
             thermostat.last_temp = thermostat.actual_temp
             thermostat.increment_temp(x)
-            print("set temp: ", thermostat.set_temp)
-            print("actual temp: ", thermostat.actual_temp)
-            print("last temp:", thermostat.last_temp)
 
         if thermostat.actual_temp > thermostat.last_temp:
             if thermostat.actual_temp < thermostat.max:
@@ -37,6 +45,7 @@ class Thermostat:
                 increment(-1)
             else:
                 increment(1)
+        
             
 
 
