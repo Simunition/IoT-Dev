@@ -1,6 +1,7 @@
 from awscrt import mqtt
 import threading
 import sys
+import Main
 
 received_count = 0
 received_all_event = threading.Event()
@@ -31,7 +32,7 @@ def on_resubscribe_complete(resubscribe_future):
                 sys.exit("Server rejected resubscribe to topic: {}".format(topic))
 
 
-def on_message_received(topic, payload, thermostat, dup, qos, retain, **kwargs):
+def on_message_received(topic, payload, dup, qos, retain, **kwargs):
     print("Received message from topic '{}': {}".format(topic, payload))
     global received_count
     received_count += 1
@@ -39,5 +40,5 @@ def on_message_received(topic, payload, thermostat, dup, qos, retain, **kwargs):
     data = (payload.decode('utf-8')).split(':')
     
     if 'set' in data:
-        thermostat.change_set_temp(int(data[2]))
-        print(thermostat.getData)
+        Main.thermostat.change_set_temp(int(data[2]))
+        print(Main.thermostat.getData)

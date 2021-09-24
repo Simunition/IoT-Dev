@@ -5,16 +5,15 @@ import Check_For_Interrupts as Check
 from awsiot import mqtt_connection_builder
 from awscrt import mqtt, io
 
+global thermostat 
+thermostat = Thermostat.Thermostat()
+
 ##Main Function 
 def main():
     #Spin up resources
     event_loop_group = io.EventLoopGroup(1)
     host_resolver = io.DefaultHostResolver(event_loop_group)
     client_bootstrap = io.ClientBootstrap(event_loop_group, host_resolver)
-
-    # #create a thermostat
-    global thermostat 
-    thermostat = Thermostat.Thermostat()
 
     #variables for mqtt connection and pub/sub
     endpoint = ''   #ex \"abcd12345wxyz-ats.iot.us-east-1.amazonaws.com\"
