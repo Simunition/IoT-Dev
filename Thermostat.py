@@ -21,9 +21,9 @@ class Thermostat:
 
     def getData(self):
         data = {}
-        data['name'] = self.name
-        data['SetTemperature'] = self.set_temp
-        data['ActualTemperature'] = self.actual_temp
+        data['Thermostat Name'] = self.name
+        data['Set Temperature'] = self.set_temp
+        data['Actual Temperature'] = self.actual_temp
         data2 = {}
         data2['desired'] = data
         data3 = {}
