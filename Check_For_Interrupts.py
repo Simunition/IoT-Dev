@@ -4,6 +4,9 @@ import sys
 
 class Check_For_Interrupts:
 
+    #This class has attributes to hold the last message, a boolean to indicate whether there is a message waiting to be processed,
+    #and a total count of all messages received while running.
+
     def __init__(self, message = '', message_set = False, received_count = 0):
         self.message = message
         self.messageSet = message_set
@@ -11,10 +14,12 @@ class Check_For_Interrupts:
 
     received_all_event = threading.Event()
 
+    #Method printed to the device terminal indicating the connection has been interrupted and indicates the error 
 
     def on_connection_interrupted(self, connection, error, **kwargs):
         print("Connection interrupted. error: {}".format(error))
 
+    #Method to print out information when the connection is resumed
 
     def on_connection_resumed(self, connection, return_code, session_present, **kwargs):
         print("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
@@ -27,6 +32,7 @@ class Check_For_Interrupts:
             # evaluate result with a callback instead.
             resubscribe_future.add_done_callback(self.on_resubscribe_complete)
 
+    #Method for resubscribing 
 
     def on_resubscribe_complete(self, resubscribe_future):
             resubscribe_results = resubscribe_future.result()
@@ -36,6 +42,9 @@ class Check_For_Interrupts:
                 if qos is None:
                     sys.exit("Server rejected resubscribe to topic: {}".format(topic))
 
+    #This method actually receives the message from the subscribed topic and sets message equal to the payload, decoded into utf-8
+    #for easier reading. It also flips the messageSet boolean to True so that the next time the main loop checks for a 
+    #message it see's that there is one pending.
 
     def on_message_received(self, topic, payload, dup, qos, retain, **kwargs):
         print("Received message from topic '{}': {}".format(topic, payload.decode('utf-8')))
