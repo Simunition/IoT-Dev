@@ -51,7 +51,7 @@ class Check_For_Interrupts:
         global received_count
         self.received_count += 1
 
-        data = (payload.decode('utf-8')).split(':')
+        data = (payload.decode('utf-8'))
 
         self.messageSet = True
         self.message = data

@@ -140,7 +140,7 @@ def main():
 
             for i in range(rand_time):
                 if(check.messageSet == True):
-                    setRequest = json.load(check.message)
+                    setRequest = json.loads(check.message)
 
                     for (k, v) in setRequest.items():
                         if (k == "setTemp"):
@@ -153,7 +153,7 @@ def main():
 
     except KeyboardInterrupt:
         #disconnect the MQTT broker connection upon interrupt from the keyboard 
-        
+
         print("Disconnecting...")
         disconnect_future = mqtt_connection.disconnect()
         disconnect_future.result()

@@ -77,11 +77,3 @@ class Thermostat:
         elif self.humidity < self.last_humidity:
             increment(1)
 
-
-
-        
-        
-            
-
-
-
