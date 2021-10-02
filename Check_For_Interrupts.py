@@ -18,19 +18,19 @@ class Check_For_Interrupts:
 
     def on_connection_interrupted(self, connection, error, **kwargs):
         log_file = open('log.txt', 'a')
-        log_file.write("Connection interrupted. error: {}".format(error))
+        log_file.write("Connection interrupted. error: {}\n".format(error))
         log_file.close()
 
     #Method to print out information when the connection is resumed
 
     def on_connection_resumed(self, connection, return_code, session_present, **kwargs):
         log_file = open('log.txt', 'a')
-        log_file.write("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
+        log_file.write("Connection resumed. return_code: {} session_present: {}\n".format(return_code, session_present))
         log_file.close()
 
         if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
             log_file = open('log.txt', 'a')
-            log_file.write("Session did not persist. Resubscribing to existing topics...")
+            log_file.write("Session did not persist. Resubscribing to existing topics...\n")
             resubscribe_future, _ = connection.resubscribe_existing_topics()
 
             # Cannot synchronously wait for resubscribe result because we're on the connection's event-loop thread,
@@ -43,7 +43,7 @@ class Check_For_Interrupts:
     def on_resubscribe_complete(self, resubscribe_future):
             log_file = open('log.txt', 'a')
             resubscribe_results = resubscribe_future.result()
-            log_file.write("Resubscribe results: {}".format(resubscribe_results))
+            log_file.write("Resubscribe results: {}\n".format(resubscribe_results))
 
             for topic, qos in resubscribe_results['topics']:
                 if qos is None:
