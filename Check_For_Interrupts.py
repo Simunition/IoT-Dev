@@ -56,7 +56,7 @@ class Check_For_Interrupts:
 
     def on_message_received(self, topic, payload, dup, qos, retain, **kwargs):
         log_file = open('log.txt', 'a')
-        log_file.write("Received message from topic '{}': {}".format(topic, payload.decode('utf-8')))
+        log_file.write("Received message from topic '{}': {}\n".format(topic, payload.decode('utf-8')))
         global received_count
         self.received_count += 1
 

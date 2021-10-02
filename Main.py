@@ -142,6 +142,7 @@ def main():
             )
 
             for i in range(rand_time):
+                log_file.flush()
                 if(check.messageSet == True):
                     setRequest = json.loads(check.message)
 
