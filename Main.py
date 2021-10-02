@@ -14,6 +14,9 @@ from awscrt import mqtt, io
 
 
 def main():
+
+    log_file = open('log.txt', 'a')
+    
     #Spin up resources for connection to IoT Core MQTT Broker 
 
     event_loop_group = io.EventLoopGroup(1)
@@ -78,7 +81,7 @@ def main():
 
     #Connection processing and confirmation that the connection succeeded 
 
-    print("Connecting to {} with client ID '{}'...".format(
+    log_file.write("Connecting to {} with client ID '{}'...".format(
         endpoint, client_id))
 
     connect_future = mqtt_connection.connect()
@@ -86,13 +89,13 @@ def main():
     #Future.result() waits until a result is available
 
     connect_future.result()
-    print("Connected!")
+    log_file.write("Connected!")
 
 
     #Subscribe to the requested topic, when a message is received it passes it into on_message_received in the 
     #check for interrupts class, which then stores the message and sets a boolean flag to indicate a message is waiting
 
-    print("Subscribing to topic '{}'...".format(sub_topic))
+    log_file.write("Subscribing to topic '{}'...".format(sub_topic))
     subscribe_future, packet_id = mqtt_connection.subscribe(
         topic=sub_topic,
         qos=mqtt.QoS.AT_LEAST_ONCE,
@@ -101,7 +104,7 @@ def main():
     #Confirmation that subscription was successful 
 
     subscribe_result = subscribe_future.result()
-    print("Subscribed with {}".format(str(subscribe_result['qos'])))
+    log_file.write("Subscribed with {}".format(str(subscribe_result['qos'])))
 
 
     #Now that we have our environment set up and connections made, this loop does all the heavy lifting.
@@ -130,7 +133,7 @@ def main():
             
             thermostat.temp_loop()
             data = json.dumps(thermostat.getData())
-            print(data)
+            log_file.write(data)
 
             mqtt_connection.publish(
                 topic = pub_topic,
@@ -154,10 +157,11 @@ def main():
     except KeyboardInterrupt:
         #disconnect the MQTT broker connection upon interrupt from the keyboard 
 
-        print("Disconnecting...")
+        log_file.write("Disconnecting...")
+        log_file.close()
         disconnect_future = mqtt_connection.disconnect()
         disconnect_future.result()
-        print("Disconnected!")
+        log_file.write("Disconnected!")
 
 
 if __name__ == "__main__":

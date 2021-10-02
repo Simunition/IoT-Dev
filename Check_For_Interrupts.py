@@ -17,37 +17,46 @@ class Check_For_Interrupts:
     #Method printed to the device terminal indicating the connection has been interrupted and indicates the error 
 
     def on_connection_interrupted(self, connection, error, **kwargs):
-        print("Connection interrupted. error: {}".format(error))
+        log_file = open('log.txt', 'a')
+        log_file.write("Connection interrupted. error: {}".format(error))
+        log_file.close()
 
     #Method to print out information when the connection is resumed
 
     def on_connection_resumed(self, connection, return_code, session_present, **kwargs):
-        print("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
+        log_file = open('log.txt', 'a')
+        log_file.write("Connection resumed. return_code: {} session_present: {}".format(return_code, session_present))
+        log_file.close()
 
         if return_code == mqtt.ConnectReturnCode.ACCEPTED and not session_present:
-            print("Session did not persist. Resubscribing to existing topics...")
+            log_file = open('log.txt', 'a')
+            log_file.write("Session did not persist. Resubscribing to existing topics...")
             resubscribe_future, _ = connection.resubscribe_existing_topics()
 
             # Cannot synchronously wait for resubscribe result because we're on the connection's event-loop thread,
             # evaluate result with a callback instead.
             resubscribe_future.add_done_callback(self.on_resubscribe_complete)
+            log_file.close()
 
     #Method for resubscribing 
 
     def on_resubscribe_complete(self, resubscribe_future):
+            log_file = open('log.txt', 'a')
             resubscribe_results = resubscribe_future.result()
-            print("Resubscribe results: {}".format(resubscribe_results))
+            log_file.write("Resubscribe results: {}".format(resubscribe_results))
 
             for topic, qos in resubscribe_results['topics']:
                 if qos is None:
                     sys.exit("Server rejected resubscribe to topic: {}".format(topic))
+            log_file.close()
 
     #This method actually receives the message from the subscribed topic and sets message equal to the payload, decoded into utf-8
     #for easier reading. It also flips the messageSet boolean to True so that the next time the main loop checks for a 
     #message it see's that there is one pending.
 
     def on_message_received(self, topic, payload, dup, qos, retain, **kwargs):
-        print("Received message from topic '{}': {}".format(topic, payload.decode('utf-8')))
+        log_file = open('log.txt', 'a')
+        log_file.write("Received message from topic '{}': {}".format(topic, payload.decode('utf-8')))
         global received_count
         self.received_count += 1
 
@@ -55,3 +64,4 @@ class Check_For_Interrupts:
 
         self.messageSet = True
         self.message = data
+        log_file.close()
