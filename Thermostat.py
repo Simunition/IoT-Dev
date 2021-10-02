@@ -50,7 +50,7 @@ class Thermostat:
             self.last_temp = self.actual_temp
             self.actual_temp += x
 
-        if self.actual_temp > self.last_temp:
+        if self.actual_temp >= self.last_temp:
             if self.actual_temp < max:
                 increment(1)
             else:
