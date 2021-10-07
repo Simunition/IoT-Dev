@@ -153,6 +153,15 @@ def main():
                         elif (k == "setLight"):
                             thermostat.light_level = int(v)
                             check.messageSet = False
+                        elif (k == "forceUpdate"):
+                            mqtt_connection.publish(
+                                topic = pub_topic,
+                                payload=data,
+                                qos=mqtt.QoS.AT_LEAST_ONCE
+                            )
+                            check.messageSet = False
+                        else:
+                            check.messageSet = False
                 time.sleep(1)
 
     except KeyboardInterrupt:
