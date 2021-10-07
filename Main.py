@@ -154,6 +154,8 @@ def main():
                             thermostat.light_level = int(v)
                             check.messageSet = False
                         elif (k == "forceUpdate"):
+                            data = json.dumps(thermostat.getData())
+                            log_file.write(data + '\n')
                             mqtt_connection.publish(
                                 topic = pub_topic,
                                 payload=data,
